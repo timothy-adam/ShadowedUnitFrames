@@ -82,7 +82,28 @@ function ShadowUF:OnInitialize()
 	self.modules.movers:Update()
 end
 
+-- Copy the client's live class colors (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS) into the passed table.
+-- This lets custom class colors/tokens supplied by the server drive class-colored health bars and text,
+-- matching what every other addon (chat, Details, etc) shows. Existing keys are overwritten; keys with no
+-- class entry (PET, VEHICLE, anything the user added) are left untouched.
+function ShadowUF:SyncClassColors(classColors)
+	local sourceColors = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
+	if( not classColors or not sourceColors ) then return end
+
+	for class, color in pairs(sourceColors) do
+		classColors[class] = {r = color.r, g = color.g, b = color.b}
+	end
+end
+
 function ShadowUF:CheckUpgrade()
+	-- July 20th: pull in the client's class colors once so existing profiles adopt the server's custom
+	-- class colors. After this the class color pickers in the options work as normal.
+	if( not self.db.profile.syncedClassColors ) then
+		self.db.profile.syncedClassColors = true
+		self.db.profile.classColors = self.db.profile.classColors or {}
+		self:SyncClassColors(self.db.profile.classColors)
+	end
+
 	-- June 19th
 	if( not ShadowUF.db.profile.font.color ) then
 		ShadowUF.db.profile.font.color = {r = 1, g = 1, b = 1, a = 1}
