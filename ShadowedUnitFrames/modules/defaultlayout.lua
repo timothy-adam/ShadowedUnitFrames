@@ -120,6 +120,9 @@ function ShadowUF:LoadDefaultLayout(useMerge)
 		PET = {r = 0.20, g = 0.90, b = 0.20},
 		VEHICLE = {r = 0.23, g = 0.41, b = 0.23},
 	}
+	-- Adopt the client's live class colors (custom classes/colors supplied by the server) so class-colored
+	-- bars and text match the rest of the UI. PET/VEHICLE aren't real classes so they keep their own defaults.
+	ShadowUF:SyncClassColors(config.classColors)
 	config.powerColors = {
 		MANA = {r = 0.30, g = 0.50, b = 0.85}, 
 		RAGE = {r = 0.90, g = 0.20, b = 0.30},
