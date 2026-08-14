@@ -66,6 +66,22 @@ local function finalizeData(config, useMerge)
 	end
 end
 
+function ShadowUF:FillClassColors(colors)
+	for classToken, color in pairs(RAID_CLASS_COLORS) do
+		if( not colors[classToken] ) then
+			colors[classToken] = {r = color.r, g = color.g, b = color.b, a = color.a}
+		end
+	end
+end
+
+function ShadowUF:FillPowerColors(colors)
+	for powerToken, color in pairs(PowerBarColor) do
+		if( type(powerToken) == "string" and powerToken ~= "" and type(color) == "table" and type(color.r) == "number" and type(color.g) == "number" and type(color.b) == "number" and not colors[powerToken] ) then
+			colors[powerToken] = {r = color.r, g = color.g, b = color.b, a = color.a}
+		end
+	end
+end
+
 function ShadowUF:LoadDefaultLayout(useMerge)
 	local config = {}
 	config.bars = {
@@ -120,9 +136,7 @@ function ShadowUF:LoadDefaultLayout(useMerge)
 		PET = {r = 0.20, g = 0.90, b = 0.20},
 		VEHICLE = {r = 0.23, g = 0.41, b = 0.23},
 	}
-	-- Adopt the client's live class colors (custom classes/colors supplied by the server) so class-colored
-	-- bars and text match the rest of the UI. PET/VEHICLE aren't real classes so they keep their own defaults.
-	ShadowUF:SyncClassColors(config.classColors)
+	self:FillClassColors(config.classColors)
 	config.powerColors = {
 		MANA = {r = 0.30, g = 0.50, b = 0.85}, 
 		RAGE = {r = 0.90, g = 0.20, b = 0.30},
@@ -134,6 +148,7 @@ function ShadowUF:LoadDefaultLayout(useMerge)
 		AMMOSLOT = {r = 0.85, g = 0.60, b = 0.55},
 		FUEL = {r = 0.85, g = 0.47, b = 0.36},
 	}
+	self:FillPowerColors(config.powerColors)
 	config.healthColors = {
 		tapped = {r = 0.5, g = 0.5, b = 0.5},
 		red = {r = 0.90, g = 0.0, b = 0.0},

@@ -182,13 +182,14 @@ local function get(info)
 end
 
 local function setColor(info, r, g, b, a)
-	local color = get(info)
+	local color = get(info) or {}
 	color.r, color.g, color.b, color.a = r, g, b, a
 	set(info, color)
 end
 
 local function getColor(info)
 	local color = get(info)
+	if( not color ) then return 1, 1, 1, 1 end
 	return color.r, color.g, color.b, color.a
 end
 
@@ -1100,7 +1101,6 @@ local function loadGeneralOptions()
 								name = L["Fuel"],
 								hasAlpha = true,
 								arg = "powerColors.FUEL",
-								hidden = hideAdvancedOption,
 							},
 						},
 					},
@@ -1262,6 +1262,29 @@ local function loadGeneralOptions()
 	end
 	
 	
+	local function getPowerName(info)
+		local name = getName(info)
+		if( name ) then return name end
+
+		local powerToken = string.lower(info[#(info)]):gsub("_", " ")
+		return string.upper(string.sub(powerToken, 1, 1)) .. string.sub(powerToken, 2)
+	end
+
+	Config.powerTable = {
+		order = 100,
+		type = "color",
+		name = getPowerName,
+		hasAlpha = true,
+		width = "half",
+		arg = "powerColors.$key",
+	}
+
+	for powerToken, color in pairs(PowerBarColor) do
+		if( type(powerToken) == "string" and powerToken ~= "" and type(color) == "table" and type(color.r) == "number" and type(color.g) == "number" and type(color.b) == "number" and not options.args.general.args.color.args.power.args[powerToken] ) then
+			options.args.general.args.color.args.power.args[powerToken] = Config.powerTable
+		end
+	end
+
 	Config.classTable = {
 		order = 0,
 		type = "color",
