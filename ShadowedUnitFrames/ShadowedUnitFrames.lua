@@ -89,6 +89,11 @@ function ShadowUF:CheckUpgrade()
 	self.db.profile.powerColors = self.db.profile.powerColors or {}
 	self:FillPowerColors(self.db.profile.powerColors)
 
+	self.db.profile.healthColors = self.db.profile.healthColors or {}
+	if( not self.db.profile.healthColors.healAbsorb ) then
+		self.db.profile.healthColors.healAbsorb = {r = 0.68, g = 0.47, b = 1}
+	end
+
 	-- June 19th
 	if( not ShadowUF.db.profile.font.color ) then
 		ShadowUF.db.profile.font.color = {r = 1, g = 1, b = 1, a = 1}
