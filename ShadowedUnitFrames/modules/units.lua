@@ -331,6 +331,10 @@ function Units:CheckGroupedUnitStatus(frame)
 	end
 end
 
+local function RaidFrameMenu_Initialize(self)
+	UnitPopup_ShowMenu(UIDROPDOWNMENU_OPEN_MENU, "RAID_PLAYER", self.unit, self.name, self.id)
+end
+
 local function ShowMenu(self)
 	if( UnitIsUnit(self.unit, "player") ) then
 		ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor")
@@ -349,7 +353,7 @@ local function ShowMenu(self)
 		
 		local menuFrame = FriendsDropDown
 		menuFrame.displayMode = "MENU"
-		menuFrame.initialize = RaidFrameDropDown_Initialize
+		menuFrame.initialize = RaidFrameMenu_Initialize
 		menuFrame.userData = self.unitID
 		menuFrame.unit = self.unitOwner
 		menuFrame.name = UnitName(self.unitOwner)
